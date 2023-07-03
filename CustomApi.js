@@ -42,14 +42,9 @@ async function callAction(executionContext) {
                 });
         }
 
-        function new_ApiParameters(
-            entity,
-            proAttr,
-            test_guid
-        ) {
+        function new_ApiParameters(entity,proAttr) {
             this.entity = entity;
             this.proAttr = proAttr;
-            this.test_guid = test_guid;
 
             this.getMetadata = function () {
                 return {
@@ -63,10 +58,6 @@ async function callAction(executionContext) {
                         proAttr: {
                             typeName: "Edm.String",
                             structuralProperty: 1,
-                        },
-                        test_guid: {
-                            typeName: "Edm.Guid",
-                            structuralProperty: 5
                         }
                     },
                     operationType: 0,
