@@ -10,7 +10,7 @@
             crossorigin="anonymous"
         />
     </head>
-    <body onload="setDataTable(params)">
+    <body>
         <div class="container">
             <table class="table">
                 <thead>
@@ -29,12 +29,7 @@
             integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
             crossorigin="anonymous"
         ></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"
-            integrity="sha512-CryKbMe7sjSCDPl18jtJI5DR5jtkUWxPXWaLCst6QjH8wxDexfRJic2WRmRXmstr2Y8SxDDWuBO6CQC6IE4KTA=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js" integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script>
             function setDataTable(params) {
                 const table = document.getElementById("body-table");
@@ -48,9 +43,7 @@
                     }</a></td>
                     <td>${element.state}</td>
                     <td>${element.comment}</td>
-                    <td>${moment(element.modified)
-                        .utc()
-                        .format("YYYY-MM-DD")}</td>
+                    <td>${moment(element.modified).format("DD-MM-YYYY, HH:mm")}</td>
                 </tr>`;
                 });
             }
