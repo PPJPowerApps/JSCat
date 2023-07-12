@@ -1,4 +1,4 @@
-const form_onload = (executionContext) => {
+async function form_onload(executionContext) {
     var formContext = executionContext.getFormContext();
 
     if (formContext.ui.getFormType() == 2) {
