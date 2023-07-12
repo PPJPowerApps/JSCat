@@ -1,15 +1,17 @@
 function ofrecer() {
-    const value = document.querySelector('input[name="pro"]:checked');
-    if (value != null) {
-        OfrecerPowerAutomate(value.value)
+    const ids = document.querySelector('input[name="pro"]:checked');
+    if (ids != null) {
+        const redoc = document.getElementById(ids.value.split('_')[0]).value
+        OfrecerPowerAutomate(ids.value, redoc)
     }
 }
 
-async function OfrecerPowerAutomate(id) {
+async function OfrecerPowerAutomate(id, redoc) {
     const ids = id.split('_')
     var proclie = {
         idpro: ids[0],
-        idcli: ids[1]
+        idcli: ids[1],
+        redoc: redoc
     }
 
     try {
