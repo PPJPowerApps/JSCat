@@ -1,6 +1,6 @@
 async function form_onload(executionContext) {
     var formContext = executionContext.getFormContext();
-
+    
     if (formContext.ui.getFormType() == 2) {
         var wrControl = formContext.getControl("WebResource_documents");
         var getId = formContext.data.entity.getId().replace("{", "").replace("}", "");
@@ -37,7 +37,9 @@ const callFlow = async (id, content) => {
             result.forEach(ele => {
                 documents.push({ name: ele.name, state: ele.state, comment: ele.comment, modified: ele.modified, url: ele.url })
             })
-            content.setDataTable(documents)
+            if (documents.length > 0) {
+                content.setDataTable(documents)
+            }
         })
         .catch(err => {
             console.error(err)
