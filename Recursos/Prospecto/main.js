@@ -14,10 +14,39 @@ prospecto.onLoad = (executionContext) => {
     }
 }
 
+prospecto.CheckProductOffer = async (executionContext) => {
+    const formContext = executionContext.getFormContext();
+    //FormType 2 == Update Form
+    if (formContext.ui.getFormType() == 2) {
+        var proAttr = formContext.getAttribute("cr8e5_productoaofrecer").getValue();
+        var getId = formContext.data.entity.getEntityReference();
+        let alert = {
+            sucess: {
+                text: 'Este producto ya se ha ofrecido anteriormente, porfavor intente con uno diferente',
+                title: 'Alerta', confirmButtonLabel: 'Aceptar'
+            },
+            error: {
+                text: 'Ocurrió un error, intentelo de nuevo. Si el problema persiste contacte con el administrador',
+                title: 'Error', confirmButtonLabel: 'Aceptar',
+            },
+            options: {
+                height: 200, width: 450
+            },
+        }
+        if (proAttr != null) {
+            const request = new apiParameters(getId, proAttr[0])
+            const check = await callCheckProductOffer(request, alert)
+            if (!check) {
+                Xrm.Navigation.openAlertDialog(alert.sucess, alert.options)
+                formContext.getAttribute("cr8e5_productoaofrecer").setValue(null)
+            }
+        }
+    }
+}
+
 prospecto.ValidateRut = (executionContext) => {
     // const utility = await import('./Utilities/utility.js')
     // utility.default.test("HOLA")
-    // utility.default.test2("NO FUNCA")
     const formContext = executionContext.getFormContext();
     let rutAttr = formContext.getAttribute("cr8e5_rut");
     let rutCont = formContext.getControl("cr8e5_rut");
@@ -41,14 +70,11 @@ prospecto.sendBenefits = async () => {
     const urlPA = "https://prod-01.brazilsouth.logic.azure.com/workflows/a241a98f7a0f4976a3f13b4aae399017/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=1Rh0ZLzd_mrAQilSs65FZp4WUA2qJTlDJrSNacLbtKU"
     let alert = {
         sucess: {
-            text: 'El proceso finalizó correctamente',
-            title: 'Correcto',
-            confirmButtonLabel: 'Ok'
+            text: 'El proceso finalizó correctamente', title: 'Correcto', confirmButtonLabel: 'Ok'
         },
         error: {
             text: 'Ocurrió un error, intentelo de nuevo. Si el problema persiste contacte con el administrador',
-            title: 'Error',
-            confirmButtonLabel: 'Aceptar',
+            title: 'Error', confirmButtonLabel: 'Aceptar',
         },
         options: {
             height: 200, width: 450
@@ -77,6 +103,39 @@ async function callSendBenefits(url, alert) {
     }
 }
 
+async function callCheckProductOffer(request, alert) {
+    try {
+        const result = await Xrm.WebApi.online.execute(request)
+        const response = await result.json()
+        return response.respuesta
+    } catch (error) {
+        console.log(error)
+        Xrm.Navigation.openAlertDialog(alert.error, alert.options)
+    }
+}
+
+function apiParameters(entity, proAttr) {
+    this.entity = entity;
+    this.proAttr = proAttr;
+}
+
+apiParameters.prototype.getMetadata = () => {
+    return {
+        operationName: "cr8e5_apiprospectoproductosofrecidos",
+        boundParameter: null,
+        parameterTypes: {
+            entity: {
+                typeName: "mscrm.cr8e5_prospecto",
+                structuralProperty: 5,
+            },
+            proAttr: {
+                typeName: "mscrm.cr8e5_productoaofrecer",
+                structuralProperty: 5,
+            }
+        },
+        operationType: 0,
+    };
+}
 
 function clearFields(data) {
     data.map(element => {
