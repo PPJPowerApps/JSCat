@@ -16,17 +16,43 @@ cliente.onLoad = async (executionContext) => {
     }
     //FormType 2 == Update Form
     if (formContext.ui.getFormType() == 2) {
-        //Muestra u oculta los campos de estado del documento y comentario
-        showDocumentFieldState(formContext)
+        
+    }
+}
+
+cliente.loadWebProducts = async (executionContext) => {
+    const formContext = executionContext.getFormContext()
+    let alert = {
+        sucess: {
+            text: 'El proceso finalizó correctamente', title: 'Correcto', confirmButtonLabel: 'Ok'
+        },
+        error: {
+            text: 'Ocurrió un error, intentelo de nuevo. Si el problema persiste contacte con el administrador',
+            title: 'Error', confirmButtonLabel: 'Aceptar',
+        },
+        options: {
+            height: 200, width: 450
+        },
+    }
+    //FormType 2 == Update Form
+    if (formContext.ui.getFormType() == 2) {
         //Llama a la lista de productos no ofertados
-        let wrControl = formContext.getControl("WebResource_Ofertas");
-        let getId = formContext.data.entity.getId().replace("{", "").replace("}", "");
-        const request = new apiParameters(getId)
-        const response = await getProducts(request, alert)
-        if (wrControl) {
-            const wr = getWebControl(wrControl, alert)
-            
-        }
+        await populateWebOffer(formContext, alert)
+    }
+}
+
+async function populateWebOffer(formContext, alert) {
+    let data = []
+    let wrControl = formContext.getControl("WebResource_Ofertas");
+    let getId = formContext.data.entity.getId().replace("{", "").replace("}", "")
+    const request = new apiParameters(getId)
+    const response = await getProducts(request, alert)
+    if (wrControl) {
+        const wr = await getWebControl(wrControl, alert)
+        response.forEach(pro => {
+            data.push({ id: pro.cr8e5_productoaofrecerid, cliente: response.idcliente ,name: pro.cr8e5_name, expiration: pro["cr8e5_fechavigencia@OData.Community.Display.V1.FormattedValue"] })
+        })
+        wr.setDataTable(data)
     }
 }
 
@@ -69,7 +95,7 @@ function apiParameters(id) {
     this.id = id
 }
 
-apiParameters.prototype.getMetaData = () => {
+apiParameters.prototype.getMetadata = () => {
     return {
         operationName: "cr8e5_apiproductoscliente",
         boundParameter: null,
