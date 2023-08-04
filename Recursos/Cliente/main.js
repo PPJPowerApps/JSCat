@@ -15,9 +15,11 @@ cliente.onLoad = async (executionContext) => {
         },
     }
     //FormType 2 == Update Form
-    if (formContext.ui.getFormType() == 2) {
-        
-    }
+}
+
+cliente.showDocumentField = (executionContext) => {
+    const formContext = executionContext.getFormContext()
+    showDocumentFieldState(formContext)
 }
 
 cliente.loadWebProducts = async (executionContext) => {
@@ -47,11 +49,11 @@ async function populateWebOffer(formContext, alert) {
     let getId = formContext.data.entity.getId().replace("{", "").replace("}", "")
     const request = new apiParameters(getId)
     const response = await getProducts(request, alert)
+    response.forEach(pro => {
+        data.push({ id: pro.cr8e5_productoaofrecerid, cliente: response.idcliente ,name: pro.cr8e5_name, expiration: pro["cr8e5_fechavigencia@OData.Community.Display.V1.FormattedValue"] })
+    })
     if (wrControl) {
         const wr = await getWebControl(wrControl, alert)
-        response.forEach(pro => {
-            data.push({ id: pro.cr8e5_productoaofrecerid, cliente: response.idcliente ,name: pro.cr8e5_name, expiration: pro["cr8e5_fechavigencia@OData.Community.Display.V1.FormattedValue"] })
-        })
         wr.setDataTable(data)
     }
 }
@@ -66,8 +68,8 @@ function showDocumentFieldState(formContext) {
     const comval = formContext.getAttribute(data.comment)
     const comvis = formContext.getControl(data.comment)
 
-    stval != null ? stvis.setVisible(true) : stvis.setVisible(false)
-    comval != null ? comvis.setVisible(true) : comvis.setVisible(false)
+    stval.getValue() != null ? stvis.setVisible(true) : stvis.setVisible(false)
+    comval.getValue() != null ? comvis.setVisible(true) : comvis.setVisible(false)
 }
 
 async function getWebControl(wrControl, alert) {
