@@ -44,7 +44,7 @@ prospecto.CheckProductOffer = async (executionContext) => {
             },
         }
         if (proAttr != null) {
-            const request = new apiParameters(getId, proAttr[0])
+            const request = new checkProductOffered(getId, proAttr[0])
             const check = await callCheckProductOffer(request, alert)
             if (!check.respuesta) {
                 Xrm.Navigation.openAlertDialog(alert.sucess, alert.options)
@@ -124,12 +124,12 @@ async function callCheckProductOffer(request, alert) {
     }
 }
 
-function apiParameters(entity, proAttr) {
+function checkProductOffered(entity, proAttr) {
     this.entity = entity;
     this.proAttr = proAttr;
 }
 
-apiParameters.prototype.getMetadata = () => {
+checkProductOffered.prototype.getMetadata = () => {
     return {
         operationName: logicalNames.customApiName,
         boundParameter: null,
