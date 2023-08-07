@@ -46,7 +46,7 @@ prospecto.CheckProductOffer = async (executionContext) => {
         if (proAttr != null) {
             const request = new apiParameters(getId, proAttr[0])
             const check = await callCheckProductOffer(request, alert)
-            if (!check) {
+            if (!check.respuesta) {
                 Xrm.Navigation.openAlertDialog(alert.sucess, alert.options)
                 formContext.getAttribute(logicalNames.productoaofrecer).setValue(null)
             }
@@ -117,7 +117,7 @@ async function callCheckProductOffer(request, alert) {
     try {
         const result = await Xrm.WebApi.online.execute(request)
         const response = await result.json()
-        return response.respuesta
+        return response
     } catch (error) {
         console.log(error)
         Xrm.Navigation.openAlertDialog(alert.error, alert.options)
