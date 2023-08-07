@@ -1,14 +1,24 @@
 // const utility = await import('./Utilities/utility.js')
 function prospecto() { }
 
+let logicalNames = {
+    ejecutivo: 'cr8e5_ejecutivo',
+    productoaofrecer: 'cr8e5_productoaofrecer',
+    escala: 'Escala',
+    rut: 'cr8e5_rut',
+    nombre: 'cr8e5_name',
+    correo: 'cr8e5_correo',
+    customApiName: 'cr8e5_apiprospectoproductosofrecidos',
+}
+
 prospecto.onLoad = (executionContext) => {
     const formContext = executionContext.getFormContext();
     // FormType 1 == Create Form
     if (formContext.ui.getFormType() == 1) {
         //Ocultar Escala de tiempo y campo ejecutivo en formulario de creacion
         let data = [
-            formContext.getControl("cr8e5_ejecutivo"),
-            formContext.getControl("Escala")
+            formContext.getControl(logicalNames.ejecutivo),
+            formContext.getControl(logicalNames.escala)
         ]
         hideFields(data);
     }
@@ -18,7 +28,7 @@ prospecto.CheckProductOffer = async (executionContext) => {
     const formContext = executionContext.getFormContext();
     //FormType 2 == Update Form
     if (formContext.ui.getFormType() == 2) {
-        var proAttr = formContext.getAttribute("cr8e5_productoaofrecer").getValue();
+        var proAttr = formContext.getAttribute(logicalNames.productoaofrecer).getValue();
         var getId = formContext.data.entity.getEntityReference();
         let alert = {
             sucess: {
@@ -38,7 +48,7 @@ prospecto.CheckProductOffer = async (executionContext) => {
             const check = await callCheckProductOffer(request, alert)
             if (!check) {
                 Xrm.Navigation.openAlertDialog(alert.sucess, alert.options)
-                formContext.getAttribute("cr8e5_productoaofrecer").setValue(null)
+                formContext.getAttribute(logicalNames.productoaofrecer).setValue(null)
             }
         }
     }
@@ -48,8 +58,8 @@ prospecto.ValidateRut = (executionContext) => {
     // const utility = await import('./Utilities/utility.js')
     // utility.default.test("HOLA")
     const formContext = executionContext.getFormContext();
-    let rutAttr = formContext.getAttribute("cr8e5_rut");
-    let rutCont = formContext.getControl("cr8e5_rut");
+    let rutAttr = formContext.getAttribute(logicalNames.rut);
+    let rutCont = formContext.getControl(logicalNames.rut);
     if (rutAttr) {
         validateRut(rutCont, rutAttr)
     }
@@ -58,10 +68,10 @@ prospecto.ValidateRut = (executionContext) => {
 prospecto.clearForm = (primaryControl) => {
     const formContext = primaryControl
     let data = [
-        formContext.getAttribute("cr8e5_name"),
-        formContext.getAttribute("cr8e5_correo"),
-        formContext.getAttribute("cr8e5_rut"),
-        formContext.getAttribute("cr8e5_productoaofrecer")
+        formContext.getAttribute(logicalNames.nombre),
+        formContext.getAttribute(logicalNames.correo),
+        formContext.getAttribute(logicalNames.rut),
+        formContext.getAttribute(logicalNames.productoaofrecer)
     ]
     clearFields(data)
 }
@@ -83,7 +93,7 @@ prospecto.sendBenefits = async () => {
     await callSendBenefits(urlPA, alert)
 }
 
-async function callSendBenefits(url, alert) {
+async function callSendBenefits(url, alert, body = '') {
     try {
         Xrm.Utility.showProgressIndicator("Please wait...");
         await fetch(url,
@@ -92,7 +102,7 @@ async function callSendBenefits(url, alert) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(""),
+                body: JSON.stringify(body),
             }
         );
         Xrm.Utility.closeProgressIndicator();
@@ -121,7 +131,7 @@ function apiParameters(entity, proAttr) {
 
 apiParameters.prototype.getMetadata = () => {
     return {
-        operationName: "cr8e5_apiprospectoproductosofrecidos",
+        operationName: logicalNames.customApiName,
         boundParameter: null,
         parameterTypes: {
             entity: {

@@ -1,5 +1,12 @@
 function cliente() { }
 
+let logicalNames = {
+    webResource: 'WebResource_Ofertas',
+    estadoDocumento: 'cr8e5_estado_documento',
+    comentarioDocumento: 'cr8e5_comentario_documento',
+    customApiName: 'cr8e5_apiproductoscliente'
+}
+
 cliente.onLoad = async (executionContext) => {
     const formContext = executionContext.getFormContext()
     let alert = {
@@ -47,9 +54,9 @@ async function populateWebOffer(formContext, alert) {
     let data = []
     let wrControl = formContext.getControl("WebResource_Ofertas");
     let getId = formContext.data.entity.getId().replace("{", "").replace("}", "")
-    const request = new apiParameters(getId)
-    const response = await getProducts(request, alert)
-    response.forEach(pro => {
+    const request = new getProducts(getId)
+    const response = await callCustomApi(request, alert)
+    response.productos.forEach(pro => {
         data.push({ id: pro.cr8e5_productoaofrecerid, cliente: response.idcliente ,name: pro.cr8e5_name, expiration: pro["cr8e5_fechavigencia@OData.Community.Display.V1.FormattedValue"] })
     })
     if (wrControl) {
@@ -59,14 +66,10 @@ async function populateWebOffer(formContext, alert) {
 }
 
 function showDocumentFieldState(formContext) {
-    let data = {
-        state: 'cr8e5_estado_documento',
-        comment: 'cr8e5_comentario_documento'
-    }
-    const stval = formContext.getAttribute(data.state)
-    const stvis = formContext.getControl(data.state)
-    const comval = formContext.getAttribute(data.comment)
-    const comvis = formContext.getControl(data.comment)
+    const stval = formContext.getAttribute(logicalNames.estadoDocumento)
+    const stvis = formContext.getControl(logicalNames.estadoDocumento)
+    const comval = formContext.getAttribute(logicalNames.comentarioDocumento)
+    const comvis = formContext.getControl(logicalNames.comentarioDocumento)
 
     stval.getValue() != null ? stvis.setVisible(true) : stvis.setVisible(false)
     comval.getValue() != null ? comvis.setVisible(true) : comvis.setVisible(false)
@@ -82,24 +85,24 @@ async function getWebControl(wrControl, alert) {
     }
 }
 
-async function getProducts(request, alert) {
+async function callCustomApi(request, alert) {
     try {
         const result = await Xrm.WebApi.online.execute(request)
         const response = await result.json()
-        return response.productos
+        return response
     } catch (error) {
         console.log(error)
         Xrm.Navigation.openAlertDialog(alert.error, alert.options)
     }
 }
 
-function apiParameters(id) {
+function getProducts(id) {
     this.id = id
 }
 
-apiParameters.prototype.getMetadata = () => {
+getProducts.prototype.getMetadata = () => {
     return {
-        operationName: "cr8e5_apiproductoscliente",
+        operationName: logicalNames.customApiName,
         boundParameter: null,
         parameterTypes: {
             id: {
