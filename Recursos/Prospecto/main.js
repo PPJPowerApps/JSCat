@@ -1,5 +1,6 @@
-// const utility = await import('./Utilities/utility.js')
+
 function prospecto() { }
+
 
 let logicalNames = {
     ejecutivo: 'cr8e5_ejecutivo',
@@ -55,8 +56,6 @@ prospecto.CheckProductOffer = async (executionContext) => {
 }
 
 prospecto.ValidateRut = (executionContext) => {
-    // const utility = await import('./Utilities/utility.js')
-    // utility.default.test("HOLA")
     const formContext = executionContext.getFormContext();
     let rutAttr = formContext.getAttribute(logicalNames.rut);
     let rutCont = formContext.getControl(logicalNames.rut);

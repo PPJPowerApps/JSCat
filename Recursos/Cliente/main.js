@@ -50,6 +50,7 @@ cliente.loadWebProducts = async (executionContext) => {
     }
 }
 
+//Obtiene informacion de una customApi y lo aplica al recurso web
 async function populateWebOffer(formContext, alert) {
     let data = []
     let wrControl = formContext.getControl("WebResource_Ofertas");
@@ -65,6 +66,7 @@ async function populateWebOffer(formContext, alert) {
     }
 }
 
+//Se encarga de mostrar u ocultar campos relacionados al estado del documento
 function showDocumentFieldState(formContext) {
     const stval = formContext.getAttribute(logicalNames.estadoDocumento)
     const stvis = formContext.getControl(logicalNames.estadoDocumento)
@@ -75,6 +77,7 @@ function showDocumentFieldState(formContext) {
     comval.getValue() != null ? comvis.setVisible(true) : comvis.setVisible(false)
 }
 
+//Se encarga de obtener el control sobre un recurso web personalizado
 async function getWebControl(wrControl, alert) {
     try {
         const response = await wrControl.getContentWindow()
@@ -85,6 +88,7 @@ async function getWebControl(wrControl, alert) {
     }
 }
 
+//Llama a una customApi (Plugin)
 async function callCustomApi(request, alert) {
     try {
         const result = await Xrm.WebApi.online.execute(request)

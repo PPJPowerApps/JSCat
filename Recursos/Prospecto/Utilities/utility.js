@@ -1,11 +1,13 @@
-function utility() { }
+function Utility() { }
 
-utility.test = (ts) => {
+Utility.test = (ts) => {
     console.log(ts)
 }
 
-utility.test2 = (ts) => {
+Utility.test2 = (ts) => {
     console.log(ts)
 }
 
-export default utility
+// exports.utility = utility
+// export default utility
+module.exports = Utility
