@@ -175,7 +175,7 @@ function clearFields(data) {
         element ? element.setValue(null) : console.log("Ocurrio un error al limpiar los campos")
     })
 }
-            
+
 function hideFields(data) {
     data.map(element => {
         element ? element.setVisible(false) : console.log("Ocurrio un problema")
