@@ -1,4 +1,3 @@
-
 function prospecto() { }
 
 
@@ -146,12 +145,37 @@ checkProductOffered.prototype.getMetadata = () => {
     };
 }
 
+// class customApi {
+//     constructor(entity, proAttr) {
+//         this.entity = entity
+//         this.proAttr = proAttr
+//     }
+// }
+
+// customApi.prototype.getMetadata = () => {
+//     return {
+//         operationName: logicalNames.customApiName,
+//         boundParameter: null,
+//         parameterTypes: {
+//             entity: {
+//                 typeName: "mscrm.cr8e5_prospecto",
+//                 structuralProperty: 5,
+//             },
+//             proAttr: {
+//                 typeName: "mscrm.cr8e5_productoaofrecer",
+//                 structuralProperty: 5,
+//             }
+//         },
+//         operationType: 0,
+//     };
+// }
+
 function clearFields(data) {
     data.map(element => {
         element ? element.setValue(null) : console.log("Ocurrio un error al limpiar los campos")
     })
 }
-
+            
 function hideFields(data) {
     data.map(element => {
         element ? element.setVisible(false) : console.log("Ocurrio un problema")
